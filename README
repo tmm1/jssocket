@@ -1,0 +1,98 @@
+jsSocket: generic javascript socket API
+  (c) 2008 Aman Gupta (tmm1)
+
+  http://github.com/tmm1/jsSocket
+
+
+WHAT IS IT
+
+  jsSocket uses Flash's XMLSocket to expose a simple socket API to javascript
+
+
+REQUIREMENTS
+  
+  jquery, jquery.media, jsonStringify and jsSocket.swf
+
+
+FEATURES
+
+  * multiple sockets on the same page
+  * keepalive to keep connections open
+  * automatic reconnect
+  * status callback for custom connecting/disconnected/reconnecting UI
+  * customizable logger for debugging
+
+
+USAGE
+
+  - Connect to site.com on port 1234
+  
+      var socket = jsSocket()
+      socket.connect('site.com', 1234)
+      socket.send('hello world')
+
+
+  - Connect to document.location.hostname on port 443
+  
+      var socket = jsSocket({ port: 443 })
+
+
+  - Install socket with default port and connect manually after setting data callback
+  
+      var socket = jsSocket({ port: 443, autoconnect: false })
+      socket.onData = function(data){ alert(data) }
+      socket.connect()
+
+
+  - Disable keepalive pings and auto-reconnect
+  
+      var socket = jsSocket({ keepalive: false, autoreconnect: false })
+      socket.connect('site.com', 1234)
+  
+
+  - Send custom keepalive packets every minute
+    
+      var socket = jsSocket()
+      socket.keepalive = function(){ socket.send('ping') }
+  
+
+  - Track the status of a socket connection
+    
+      var socket = jsSocket({ port: 443 })
+      socket.onStatus = function(type, val){
+        switch(type){
+          case 'connecting':   // connecting to the server
+            break
+
+          case 'connected':    // connected
+            break
+
+          case 'disconnected': // disconnected
+        
+          case 'waiting':      // waiting to reconnect in val seconds
+            break
+
+          case 'failed':       // attempted max reconnects
+            break
+        }
+      }
+
+
+  - Debug jsSocket
+  
+      var socket = jsSocket({ debug: true })
+      socket.logger = console.log     // log to firebug
+      socket.logger = function(arg){  // log to a div
+        if(!$('#logger'))
+          $('<div/>').attr('id', 'logger').appendTo('body')
+
+        $('#logger').append(
+          $('<p/>').text(arg.toString())
+        )
+      }
+
+
+OTHER RESOURCES
+
+  Alex MacCaw's Juggernaut: http://juggernaut.rubyforge.org
+  jssockets (uses Flex/Flash9's RemotingSocket): http://code.google.com/p/jssockets
