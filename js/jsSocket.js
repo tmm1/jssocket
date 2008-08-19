@@ -14,7 +14,7 @@ function jsSocket(args){
 }
 
 // location of jsSocket.swf
-jsSocket.swf = "/jsSocket.swf"
+jsSocket.swf = "/flash/jsSocket.swf"
 
 // list of sockets
 jsSocket.sockets = {}
