@@ -25,6 +25,11 @@ FEATURES
 
 USAGE
 
+  - Specify the path to jsSocket.swf
+  
+      jsSocket.swf = '/flash/jsSocket.swf'
+
+
   - Connect to site.com on port 1234
   
       var socket = jsSocket()
