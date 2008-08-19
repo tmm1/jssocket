@@ -44,6 +44,15 @@ USAGE
       socket.connect()
 
 
+  - Hook into connected/disconnected/data events
+  
+      var socket = jsSocket({
+        onOpen:  function()    { alert('connected') },
+        onData:  function(data){ alert('got data: ' + data) },
+        onClose: function()    { alert('disconnected') }
+      })
+
+
   - Disable keepalive pings and auto-reconnect
   
       var socket = jsSocket({ keepalive: false, autoreconnect: false })
