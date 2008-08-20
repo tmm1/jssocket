@@ -23,11 +23,19 @@ FEATURES
   * customizable logger for debugging
 
 
+WHY FLASH
+
+  * high market penetration
+      (according to a meebo study, more people had flash installed than javascript enabled)
+  * single TCP connection (instead of one ajax connection per outgoing packet)
+  * lower bandwidth usage and latency than long-polling
+
+
 CAVEATS
 
   * extra initial TCP connection required for security policy
   * packets must be delimited by null bytes
-  * html content must be base64 encoded
+  * html and binary content must be base64 encoded
 
 
 USAGE
