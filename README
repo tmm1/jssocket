@@ -23,6 +23,13 @@ FEATURES
   * customizable logger for debugging
 
 
+CAVEATS
+
+  * extra initial TCP connection required for security policy
+  * packets must be delimited by null bytes
+  * html content must be base64 encoded
+
+
 USAGE
 
   - Specify the path to jsSocket.swf
@@ -82,6 +89,7 @@ USAGE
             break
 
           case 'disconnected': // disconnected
+            break
         
           case 'waiting':      // waiting to reconnect in val seconds
             break
