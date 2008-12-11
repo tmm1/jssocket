@@ -12,6 +12,7 @@ WHAT IS IT
 REQUIREMENTS
   
   jquery, jquery.media, jsonStringify and jsSocket.swf
+  mtasc (http://mtasc.org) or haxe (http://haxe.org) to re-compile the swfs from source
 
 
 FEATURES
@@ -126,3 +127,6 @@ OTHER RESOURCES
 
   Alex MacCaw's Juggernaut: http://juggernaut.rubyforge.org
   jssockets (uses Flex/Flash9's RemotingSocket): http://code.google.com/p/jssockets
+  XMLSocket bridge: http://www.devpro.it/xmlsocket/
+  FlashSocket: http://ionelmc.wordpress.com/2008/11/29/flash-socket-bridge-with-haxe/
+  socketBridge: http://matthaynes.net/blog/2008/07/17/socketbridge-flash-javascript-socket-bridge/
