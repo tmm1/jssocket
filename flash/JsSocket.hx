@@ -1,9 +1,14 @@
 class JsSocket {
   static var socket:flash.net.Socket;
   static var id:String;
+  static var buffer:String = "";
 
   private static function calljs(type, data:Dynamic) {
     flash.external.ExternalInterface.call('jsSocket.callback', id, type, data);
+  }
+
+  private static function debug(data:Dynamic) {
+    flash.external.ExternalInterface.call('console.log', data);
   }
 
   static function main() {
@@ -37,7 +42,19 @@ class JsSocket {
     });
 
     socket.addEventListener(flash.events.ProgressEvent.SOCKET_DATA, function(d){
-      calljs('onData', socket.readUTFBytes(socket.bytesAvailable));
+      var size = socket.bytesAvailable;
+      var data = new flash.utils.ByteArray();
+      socket.readBytes(data);
+
+      buffer += data.toString();
+
+      if (buffer.indexOf("\x00") > -1) {
+        var packets = buffer.split("\x00");
+        while (packets.length > 1) {
+          calljs('onData', packets.shift());
+        }
+        buffer = packets.shift();
+      }
     });
 
     return socket.connect(host, Std.parseInt(port));
@@ -46,7 +63,7 @@ class JsSocket {
   static function send(data:String) {
     if (socket.connected && data.length > 0) {
       socket.writeUTFBytes(data);
-      socket.writeUTFBytes("\x00");
+      socket.writeByte(0);
       socket.flush();
       return true;
     } else
