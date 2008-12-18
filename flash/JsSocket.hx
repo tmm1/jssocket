@@ -2,6 +2,7 @@ class JsSocket {
   static var socket:flash.net.Socket;
   static var id:String;
   static var buffer:String = "";
+  static var sizedReads:Bool = false;
 
   private static function calljs(type, data:Dynamic) {
     flash.external.ExternalInterface.call('jsSocket.callback', id, type, data);
@@ -13,6 +14,7 @@ class JsSocket {
 
   static function main() {
     id = flash.Lib.current.loaderInfo.parameters.id;
+    sizedReads = flash.Lib.current.loaderInfo.parameters.sizedReads ? true : false;
 
     flash.external.ExternalInterface.addCallback("open", open);
     flash.external.ExternalInterface.addCallback("send", send);
@@ -42,18 +44,22 @@ class JsSocket {
     });
 
     socket.addEventListener(flash.events.ProgressEvent.SOCKET_DATA, function(d){
-      var size = socket.bytesAvailable;
-      var data = new flash.utils.ByteArray();
-      socket.readBytes(data);
+      if (sizedReads) {
+        calljs('onData', socket.readUTF());
+      } else {
+        var size = socket.bytesAvailable;
+        var data = new flash.utils.ByteArray();
+        socket.readBytes(data);
 
-      buffer += data.toString();
+        buffer += data.toString();
 
-      if (buffer.indexOf("\x00") > -1) {
-        var packets = buffer.split("\x00");
-        while (packets.length > 1) {
-          calljs('onData', packets.shift());
+        if (buffer.indexOf("\x00") > -1) {
+          var packets = buffer.split("\x00");
+          while (packets.length > 1) {
+            calljs('onData', packets.shift());
+          }
+          buffer = packets.shift();
         }
-        buffer = packets.shift();
       }
     });
 
