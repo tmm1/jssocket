@@ -35,6 +35,11 @@ jsSocket.prototype = {
   host: null,     // host == null means window.location.hostname
   port: null,     // port to connect to (443 is recommended to get through firewalls)
 
+  // toggle packet reading mode between null terminated or size prefixed
+  // null terminated is the default to be bacwards compatible with flash8/AS2s XMLSocket
+  // flash9/AS3 supports size prefixed mode which allows sending raw data without base64
+  sizedReads: false,
+
   init: function(opts) {
     var self = this
 
@@ -68,7 +73,7 @@ jsSocket.prototype = {
                                           width: 1,
                                           height: 1,
                                           params: { id: self.id },
-                                          flashvars: { id: self.id }
+                                          flashvars: { id: self.id, sizedReads: self.sizedReads }
                                        })
 
       $(window).bind('beforeunload', function(){
