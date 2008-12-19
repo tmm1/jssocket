@@ -14,7 +14,7 @@ class JsSocket {
 
   static function main() {
     id = flash.Lib.current.loaderInfo.parameters.id;
-    sizedReads = flash.Lib.current.loaderInfo.parameters.sizedReads ? true : false;
+    sizedReads = flash.Lib.current.loaderInfo.parameters.sizedReads;
 
     flash.external.ExternalInterface.addCallback("open", open);
     flash.external.ExternalInterface.addCallback("send", send);
