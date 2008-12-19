@@ -3,6 +3,7 @@ class JsSocket {
   static var id:String;
   static var buffer:String = "";
   static var sizedReads:Bool = false;
+  static var slash:EReg = ~/\\/g;
 
   private static function calljs(type, data:Dynamic) {
     flash.external.ExternalInterface.call('jsSocket.callback', id, type, data);
@@ -45,7 +46,8 @@ class JsSocket {
 
     socket.addEventListener(flash.events.ProgressEvent.SOCKET_DATA, function(d){
       if (sizedReads) {
-        calljs('onData', socket.readUTF());
+        while (socket.bytesAvailable > 0)
+          calljs('onData', slash.replace(socket.readUTF(), '\\\\'));
       } else {
         var size = socket.bytesAvailable;
         var data = new flash.utils.ByteArray();
@@ -68,9 +70,14 @@ class JsSocket {
 
   static function send(data:String) {
     if (socket.connected && data.length > 0) {
-      socket.writeUTFBytes(data);
-      socket.writeByte(0);
-      socket.flush();
+      var t = new flash.utils.Timer(0, 1);
+      t.addEventListener(flash.events.TimerEvent.TIMER, function(d){
+        socket.writeUTFBytes(data);
+        socket.writeByte(0);
+        socket.flush();
+      });
+      t.start();
+
       return true;
     } else
       return false;
