@@ -3,6 +3,7 @@ class JsSocket {
   static var id:String;
   static var buffer:String = "";
   static var sizedReads:Bool = false;
+  static var packetSize:Int = -1;
   static var slash:EReg = ~/\\/g;
 
   private static function calljs(type, data:Dynamic) {
@@ -46,8 +47,26 @@ class JsSocket {
 
     socket.addEventListener(flash.events.ProgressEvent.SOCKET_DATA, function(d){
       if (sizedReads) {
-        while (socket.bytesAvailable > 0)
-          calljs('onData', slash.replace(socket.readUTF(), '\\\\'));
+        while (socket.bytesAvailable > 0) {
+          // figure out the packet size
+          if (packetSize > -1) {
+            // we have it already
+          } else if (socket.bytesAvailable >= 2) {
+            // read the packet size
+            packetSize = socket.readShort();
+          } else {
+            // lets wait
+            break;
+          }
+
+          // read the packet, if possible
+          if (socket.bytesAvailable >= packetSize) {
+            calljs('onData', slash.replace(socket.readUTFBytes(packetSize), '\\\\'));
+            packetSize = -1;
+          } else {
+            break;
+          }
+        }
       } else {
         var size = socket.bytesAvailable;
         var data = new flash.utils.ByteArray();
