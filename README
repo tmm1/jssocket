@@ -130,3 +130,8 @@ OTHER RESOURCES
   XMLSocket bridge: http://www.devpro.it/xmlsocket/
   FlashSocket: http://ionelmc.wordpress.com/2008/11/29/flash-socket-bridge-with-haxe/
   socketBridge: http://matthaynes.net/blog/2008/07/17/socketbridge-flash-javascript-socket-bridge/
+
+
+LICENSE
+
+  Licensed under the Ruby License (http://www.ruby-lang.org/en/LICENSE.txt).
